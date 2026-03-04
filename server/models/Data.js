@@ -16,13 +16,25 @@ const DataSchema = new mongoose.Schema({
     },
     money: {
         type: Number,
-        required: true
+        required: false
     },
     category: {
         type: String,
-        required: true
-    }
+        required: false
+    },
+    description: {
+        type: String, 
+        required: false
+    },
+    date: {
+        type: Date,
+        required: false
+    },
 }, { timestamps: true });
+
+DataSchema.pre(/^find/, function() {
+    this.sort({ date: -1 });
+});
 
 const Data = mongoose.model("Data", DataSchema);
 

@@ -1,0 +1,10 @@
+<p>profile works!</p>
+<div>
+    <label>{{ userData.name }}</label><br>
+    <label>{{ userData.email }}</label><br>
+    <button (click)="this.isPasswordChange = true" class="bg-red-300">Change Password</button>
+    @if (isPasswordChange) {
+        <input type="password" #newPassword placeholder="New Password" id="newPassword">
+        <button (click)="passwordChange(newPassword.value)" class="bg-green-300">Submit</button>
+    }
+</div>

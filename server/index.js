@@ -6,6 +6,8 @@ import path from 'path';
 import url from 'url';
 
 import authRoute from './routes/auth.js';
+import homeRoute from './routes/home.js';
+import { authMiddleware } from './middleware/auth.js';
 
 let __filename = url.fileURLToPath(import.meta.url);
 let __dirname = path.dirname(__filename);
@@ -25,6 +27,7 @@ mongoose.connect(uri)
     .catch(err => console.log(err));
 
 app.use('/auth', authRoute);
+app.use('/home', authMiddleware, homeRoute);
 
 app.listen(port, () => {
     console.log(`Server is tunning at port: ${port}`);
