@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, computed, input, signal } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { DataList } from '../../../models/DataList.type';
@@ -12,6 +12,7 @@ import { DataList } from '../../../models/DataList.type';
 })
 export class Chart {
   dataList = input<DataList[]>([]);
+  isXl = signal(this.getIsXlViewport());
 
   categorySums = computed(() =>
     this.dataList().reduce((acc, item) => {
@@ -29,18 +30,30 @@ export class Chart {
       datasets: [
         {
           data: Object.values(sums),
-          backgroundColor: ['#4F46E5', '#06B6D4', '#F59E0B', '#EF4444'],
+          backgroundColor: ['#4F46E5', '#06B6D4', '#F59E0B', '#EF4444', '#10B981', '#8B5CF6', '#EC4899', '#3B82F6'],
           borderWidth: 0,
         },
       ],
     };
   });
 
-  doughnutChartOptions: ChartOptions<'doughnut'> = {
+  doughnutChartOptions = computed<ChartOptions<'doughnut'>>(() => ({
     responsive: true,
-    cutout: '70%',
+    maintainAspectRatio: false,
+    cutout: '50%',
     plugins: {
-      legend: { position: 'bottom' }
-    }
-  };
+      legend: {
+        position: this.isXl() ? 'bottom' : 'right',
+      },
+    },
+  }));
+
+  @HostListener('window:resize')
+  onResize() {
+    this.isXl.set(this.getIsXlViewport());
+  }
+
+  private getIsXlViewport() {
+    return typeof window !== 'undefined' && window.matchMedia('(min-width: 1100px)').matches;
+  }
 }

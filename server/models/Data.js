@@ -26,6 +26,11 @@ const DataSchema = new mongoose.Schema({
         type: String, 
         required: false
     },
+    tags: {
+        type: [String],
+        required: false,
+        default: []
+    },
     date: {
         type: Date,
         required: false

@@ -8,11 +8,11 @@ const api = environment.apiBaseUrl;
 })
 export class DashboardService {
   http = inject(HttpClient);
-  createNew(userId: string, title: string, description: string, money: number, category: string, date: string) {
+  createNew(userId: string, title: string, description: string, money: number, category: string, date: string, tags: string[] = []) {
     const url = `${api}/api/home/${userId}/new/`;
     const token = localStorage.getItem('token');
     const headers = { Authorization: `Bearer ${token}` };
-    return this.http.post(url, { title, description, money, category, date }, { headers });
+    return this.http.post(url, { title, description, money, category, date, tags }, { headers });
   }
   getData(userId: string) {
     const url = `${api}/api/home/${userId}/`;
@@ -26,10 +26,10 @@ export class DashboardService {
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.delete(url, { headers });
   }
-  editItem(userId: string, dataId: string, title: string, description: string, money: number, category: string) {
+  editItem(userId: string, dataId: string, title: string, description: string, money: number, category: string, tags: string[] = []) {
     const url = `${api}/api/home/${userId}/edit/`;
     const token = localStorage.getItem('token');
     const headers = { Authorization: `Bearer ${token}` };
-    return this.http.put(url, { dataId, title, description, money, category }, { headers });
+    return this.http.put(url, { dataId, title, description, money, category, tags }, { headers });
   }
 }

@@ -1,10 +1,87 @@
-<p>profile works!</p>
-<div>
-    <label>{{ userData.name }}</label><br>
-    <label>{{ userData.email }}</label><br>
-    <button (click)="this.isPasswordChange = true" class="bg-red-300">Change Password</button>
-    @if (isPasswordChange) {
-        <input type="password" #newPassword placeholder="New Password" id="newPassword">
-        <button (click)="passwordChange(newPassword.value)" class="bg-green-300">Submit</button>
+<main class="min-h-screen bg-black text-white">
+    @if (showToast) {
+    <div class="fixed top-4 right-4 z-50 min-w-64 rounded-xl border px-4 py-3 shadow-2xl backdrop-blur transition-all"
+        [class.bg-emerald-950/90]="toastType === 'success'" [class.border-emerald-500/70]="toastType === 'success'"
+        [class.text-emerald-100]="toastType === 'success'" [class.bg-red-950/90]="toastType === 'error'"
+        [class.border-red-500/70]="toastType === 'error'" [class.text-red-100]="toastType === 'error'">
+        <div class="flex items-start justify-between gap-3">
+            <p class="text-sm font-medium">{{ toastMessage }}</p>
+            <button type="button" class="text-xs opacity-80 hover:opacity-100" (click)="showToast = false">✕</button>
+        </div>
+    </div>
     }
-</div>
+    <section class="mx-auto flex flex-col gap-2 min-h-screen max-w-6xl items-center justify-center px-4 py-10 sm:px-8">
+        <div
+            class="w-full max-w-xl rounded-2xl border border-gray-700/70 bg-gray-900/65 p-6 shadow-2xl shadow-gray-950/60 backdrop-blur">
+            <div class="flex items-center justify-between gap-3">
+                <p class="text-sm tracking-wide font-semibold text-gray-300">Spnt</p>
+            </div>
+            <h1 class="mt-4 text-center text-2xl font-bold">Profile</h1>
+
+            <div class="mt-6 space-y-4">
+                <div class="rounded-xl border border-gray-700/80 bg-gray-950/70 px-4 py-3">
+                    <p class="text-xs text-gray-300">Name</p>
+                    <p class="mt-1 text-sm font-medium text-gray-100">{{ userData().name }}</p>
+                </div>
+
+                <div class="rounded-xl border border-gray-700/80 bg-gray-950/70 px-4 py-3">
+                    <p class="text-xs text-gray-300">Email</p>
+                    <p class="mt-1 text-sm font-medium text-gray-100">{{ userData().email }}</p>
+                </div>
+
+                <div class="rounded-xl border border-gray-700/80 bg-gray-950/70 px-4 py-3">
+                    <p class="text-xs text-gray-300">Budget</p>
+                    <div class="mt-3 rounded-xl flex gap-2 not-sm:flex-col border border-gray-700 bg-gray-950/80">
+                        <input #newBudget type="number" placeholder="Enter monthly budget"
+                            class="w-full rounded-xl px-3 py-2 text-sm uppercase outline-none placeholder:text-white focus:border-gray-400"
+                            [value]="userData().budget" />
+                        <button type="button"
+                            class="rounded-md bg-transparent mx-4 my-2 p-1 text-sm font-semibold text-white transition hover:bg-gray-500/15"
+                            (click)="changeBudget(newBudget.value)">
+                            <img src="pen.png" alt="edit_icon" class="h-4 w-4">
+                        </button>
+                    </div>
+                </div>
+
+                <div class="rounded-xl border border-gray-700/80 bg-gray-950/70 px-4 py-3">
+                    <p class="text-xs text-gray-300">Currency</p>
+                    <div class="mt-3 rounded-xl flex gap-2 not-sm:flex-col border border-gray-700 bg-gray-950/80">
+                        <input #newCurrency type="text" placeholder="Enter currency code (e.g. USD)"
+                            class="w-full rounded-xl px-3 py-2 text-sm uppercase outline-none placeholder:text-white focus:border-gray-400"
+                            [value]="userData().currency" />
+                        <button type="button"
+                            class="rounded-md bg-transparent mx-4 my-2 p-1 text-sm font-semibold text-white transition hover:bg-gray-500/15"
+                            (click)="changeCurrency(newCurrency.value)">
+                            <img src="pen.png" alt="edit_icon" class="h-4 w-4">
+                        </button>
+                    </div>
+                </div>
+
+                <button type="button"
+                    class="w-full rounded-md border border-gray-500 bg-transparent px-4 py-2.5 text-sm font-semibold text-gray-100 transition hover:bg-gray-500/15"
+                    (click)="isPasswordChange = true">
+                    Change Password
+                </button>
+
+                @if (isPasswordChange) {
+                <div class="space-y-3 rounded-xl border border-gray-700/80 bg-gray-950/70 p-4">
+                    <label for="newPassword" class="text-xs text-gray-200">New Password</label>
+                    <input id="newPassword" #newPassword type="password" placeholder="Enter new password"
+                        class="w-full rounded-md border border-gray-700 bg-gray-950/80 px-3 py-2 text-sm outline-none placeholder:text-gray-400 focus:border-gray-400" />
+
+                    <button type="button"
+                        class="w-full rounded-md border border-gray-500 bg-transparent px-4 py-2.5 text-sm font-semibold text-gray-100 transition hover:bg-gray-500/15"
+                        (click)="passwordChange(newPassword.value)">
+                        Submit
+                    </button>
+                </div>
+                }
+            </div>
+        </div>
+        @if (userId) {
+        <button [routerLink]="['/home', userId]" class="px-4 py-2 text-xs text-gray-200 hover:underline">
+            &larr; Back to Dashboard
+        </button>
+        }
+    </section>
+</main>

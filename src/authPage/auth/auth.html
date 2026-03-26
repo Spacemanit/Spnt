@@ -1,20 +1,20 @@
-<main class="min-h-screen bg-violet-950 text-white">
+<main class="min-h-screen bg-black text-white">
 	<section class="mx-auto flex min-h-screen max-w-6xl items-center justify-center px-4 py-10 sm:px-8">
-		<div class="w-full max-w-md rounded-2xl border border-violet-700/70 bg-violet-900/65 p-6 shadow-2xl shadow-violet-950/60 backdrop-blur">
-			<p class="text-center text-sm tracking-wide font-semibold text-violet-300">Spnt</p>
+		<div class="w-full max-w-md rounded-2xl border border-gray-700/70 bg-gray-900/65 p-6 shadow-2xl shadow-gray-950/60 backdrop-blur">
+			<p class="text-center text-sm tracking-wide font-semibold text-gray-300">Spnt</p>
 
-			<div class="mt-5 grid grid-cols-2 gap-2 rounded-lg border border-violet-700/80 bg-violet-950/70 p-1 text-sm">
+			<div class="mt-5 grid grid-cols-2 gap-2 rounded-lg border border-gray-700/80 bg-gray-950/70 p-1 text-sm">
 				<button
 					type="button"
 					class="rounded-md px-3 py-2 transition"
-					[class]="mode() === 'login' ? 'bg-violet-500 text-white font-semibold' : 'text-violet-300 hover:bg-violet-900'"
+					[class]="mode() === 'login' ? 'bg-gray-500 text-white font-semibold' : 'text-gray-300 hover:bg-gray-900'"
 					(click)="mode.set('login')">
 					Log in
 				</button>
 				<button
 					type="button"
 					class="rounded-md px-3 py-2 transition"
-					[class]="mode() === 'signup' ? 'bg-violet-500 text-white font-semibold' : 'text-violet-300 hover:bg-violet-900'"
+					[class]="mode() === 'signup' ? 'bg-gray-500 text-white font-semibold' : 'text-gray-300 hover:bg-gray-900'"
 					(click)="mode.set('signup')">
 					Sign up
 				</button>
@@ -23,48 +23,48 @@
 			@if (mode() === 'login') {
 			<form class="mt-6 space-y-3" (submit)="$event.preventDefault(); login(loginEmail.value, loginPass.value)">
 				<div class="space-y-1">
-					<label for="loginEmail" class="text-xs text-violet-200">Email</label>
-					<input id="loginEmail" #loginEmail type="email" placeholder="Enter your email" class="w-full rounded-md border border-violet-700 bg-violet-950/80 px-3 py-2 text-sm outline-none placeholder:text-violet-400 focus:border-violet-400">
+					<label for="loginEmail" class="text-xs text-gray-200">Email</label>
+					<input id="loginEmail" #loginEmail type="email" placeholder="Enter your email" class="w-full rounded-md border border-gray-700 bg-gray-950/80 px-3 py-2 text-sm outline-none placeholder:text-gray-400 focus:border-gray-400">
 				</div>
 				<div class="space-y-1">
-					<label for="loginPass" class="text-xs text-violet-200">Password</label>
-					<input id="loginPass" #loginPass type="password" placeholder="Enter your password" class="w-full rounded-md border border-violet-700 bg-violet-950/80 px-3 py-2 text-sm outline-none placeholder:text-violet-400 focus:border-violet-400">
+					<label for="loginPass" class="text-xs text-gray-200">Password</label>
+					<input id="loginPass" #loginPass type="password" placeholder="Enter your password" class="w-full rounded-md border border-gray-700 bg-gray-950/80 px-3 py-2 text-sm outline-none placeholder:text-gray-400 focus:border-gray-400">
 				</div>
-				<label class="flex items-center gap-2 text-xs text-violet-300">
-					<input type="checkbox" class="rounded border-violet-600 bg-violet-950">
+				<label class="flex items-center gap-2 text-xs text-gray-300">
+					<input type="checkbox" class="rounded border-gray-600 bg-gray-950">
 					Remember me
 				</label>
-				<button type="submit" class="w-full rounded-md border border-violet-500 bg-transparent px-4 py-2.5 text-sm font-semibold text-violet-100 transition hover:bg-violet-500/15">Continue</button>
+				<button type="submit" class="w-full rounded-md border border-gray-500 bg-transparent px-4 py-2.5 text-sm font-semibold text-gray-100 transition hover:bg-gray-500/15">Continue</button>
 			</form>
-			<p class="mt-4 text-center text-xs text-violet-300">Don't have an account?
-				<button type="button" class="font-semibold text-violet-200 hover:text-white" (click)="mode.set('signup')">Sign up</button>
+			<p class="mt-4 text-center text-xs text-gray-300">Don't have an account?
+				<button type="button" class="font-semibold text-gray-200 hover:text-white" (click)="mode.set('signup')">Sign up</button>
 			</p>
 			} @else {
 			<form class="mt-6 space-y-3" (submit)="$event.preventDefault(); signup(signupName.value, signupEmail.value, signupPass.value)">
 				<div class="space-y-1">
-					<label for="signupName" class="text-xs text-violet-200">Full name</label>
-					<input id="signupName" #signupName type="text" placeholder="Enter your full name" class="w-full rounded-md border border-violet-700 bg-violet-950/80 px-3 py-2 text-sm outline-none placeholder:text-violet-400 focus:border-violet-400">
+					<label for="signupName" class="text-xs text-gray-200">Full name</label>
+					<input id="signupName" #signupName type="text" placeholder="Enter your full name" class="w-full rounded-md border border-gray-700 bg-gray-950/80 px-3 py-2 text-sm outline-none placeholder:text-gray-400 focus:border-gray-400">
 				</div>
 				<div class="space-y-1">
-					<label for="signupEmail" class="text-xs text-violet-200">Email</label>
-					<input id="signupEmail" #signupEmail type="email" placeholder="Enter your email" class="w-full rounded-md border border-violet-700 bg-violet-950/80 px-3 py-2 text-sm outline-none placeholder:text-violet-400 focus:border-violet-400">
+					<label for="signupEmail" class="text-xs text-gray-200">Email</label>
+					<input id="signupEmail" #signupEmail type="email" placeholder="Enter your email" class="w-full rounded-md border border-gray-700 bg-gray-950/80 px-3 py-2 text-sm outline-none placeholder:text-gray-400 focus:border-gray-400">
 				</div>
 				<div class="space-y-1">
-					<label for="signupPass" class="text-xs text-violet-200">Password</label>
-					<input id="signupPass" #signupPass type="password" placeholder="Create your password" class="w-full rounded-md border border-violet-700 bg-violet-950/80 px-3 py-2 text-sm outline-none placeholder:text-violet-400 focus:border-violet-400">
+					<label for="signupPass" class="text-xs text-gray-200">Password</label>
+					<input id="signupPass" #signupPass type="password" placeholder="Create your password" class="w-full rounded-md border border-gray-700 bg-gray-950/80 px-3 py-2 text-sm outline-none placeholder:text-gray-400 focus:border-gray-400">
 				</div>
-				<label class="flex items-center gap-2 text-xs text-violet-300">
-					<input type="checkbox" class="rounded border-violet-600 bg-violet-950">
+				<label class="flex items-center gap-2 text-xs text-gray-300">
+					<input type="checkbox" class="rounded border-gray-600 bg-gray-950">
 					I agree to the Terms and Privacy
 				</label>
-				<button type="submit" class="w-full rounded-md border border-violet-500 bg-transparent px-4 py-2.5 text-sm font-semibold text-violet-100 transition hover:bg-violet-500/15">Create account</button>
+				<button type="submit" class="w-full rounded-md border border-gray-500 bg-transparent px-4 py-2.5 text-sm font-semibold text-gray-100 transition hover:bg-gray-500/15">Create account</button>
 			</form>
-			<p class="mt-4 text-center text-xs text-violet-300">Already have an account?
-				<button type="button" class="font-semibold text-violet-200 hover:text-white" (click)="mode.set('login')">Log in</button>
+			<p class="mt-4 text-center text-xs text-gray-300">Already have an account?
+				<button type="button" class="font-semibold text-gray-200 hover:text-white" (click)="mode.set('login')">Log in</button>
 			</p>
 			}
 
-			<div class="mt-6 text-center text-xs text-violet-300">
+			<div class="mt-6 text-center text-xs text-gray-300">
 				<a href="/" class="hover:text-white">← Back to Home</a>
 			</div>
 		</div>

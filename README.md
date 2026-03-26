@@ -1,6 +1,6 @@
 # Spnt
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.4.
+Spnt is an Angular web application that provides a modern, responsive user interface for managing and displaying youe money habits. Built with Angular CLI, it includes development tools, testing frameworks, and production-ready build configurations.
 
 ## Development server
 
@@ -53,6 +53,19 @@ ng e2e
 ```
 
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+
+## Running on a local network
+
+For running on a local network, use a tunnel service (I used tailscale) and get your IP
+Then if you are using tailscale, enable funnel on whichever port you use for mongoDB and angular.
+
+```bash
+npm run global
+```
+then go to `http://<tailscale-ip>:<port>/`
+
+Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+
 
 ## Additional Resources
 

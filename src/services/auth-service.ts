@@ -22,16 +22,34 @@ export class AuthService {
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.get(url, { headers });
   }
-  changePassword(userId: string, password: string, name?: string, email?: string) {
-    const url = `${api}/api/auth/update`;
+  changePassword(userId: string, password: string) {
+    const url = `${api}/api/auth/update/password`;
     const token = localStorage.getItem('token');
     const headers = { Authorization: `Bearer ${token}` };
-    return this.http.put(url, { userId, name, email, password }, { headers });
+    return this.http.patch(url, { userId, password }, { headers });
+  }
+  updateProfile(userId: string, profile: { name?: string; currency?: string; budget?: number }) {
+    const url = `${api}/api/auth/update/profile`;
+    const token = localStorage.getItem('token');
+    const headers = { Authorization: `Bearer ${token}` };
+    return this.http.patch(url, { userId, ...profile }, { headers });
+  }
+  updateEmail(userId: string, email: string) {
+    const url = `${api}/api/auth/update/email`;
+    const token = localStorage.getItem('token');
+    const headers = { Authorization: `Bearer ${token}` };
+    return this.http.patch(url, { userId, email }, { headers });
   }
   updateCurrency(userId: string, currency: string) {
-    const url = `${api}/api/auth/update/currency`;
-    const token = localStorage.getItem('token');
-    const headers = { Authorization: `Bearer ${token}` };
-    return this.http.put(url, { userId, currency }, { headers });
+    return this.updateProfile(userId, { currency });
+  }
+  updateBudget(userId: string, budget: number) {
+    return this.updateProfile(userId, { budget });
+  }
+  changeBudget(userId: string, budget: string, name?: string) {
+    return this.updateProfile(userId, {
+      budget: Number(budget),
+      ...(name ? { name } : {}),
+    });
   }
 }

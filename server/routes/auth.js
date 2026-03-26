@@ -46,29 +46,62 @@ router.post("/signup", async (req, res) => {
     res.status(201).json({ message: "Success" });
 });
 
-router.put('/update', async (req, res) => {
-    const { userId, name, email, password } = req.body;
-    if (!userId || !name || !email) {
+router.patch('/update/profile', async (req, res) => {
+    const { userId, name, currency, budget } = req.body;
+    if (!userId) {
         return res.status(400).json({ message: "Please enter all fields" });
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.findOneAndUpdate({ _id: userId }, { name, email, password: hashedPassword }, { returnDocument: 'after' });
 
+    const updatePayload = {};
+    if (typeof name === 'string' && name.trim()) {
+        updatePayload.name = name.trim();
+    }
+    if (typeof currency === 'string' && currency.trim()) {
+        updatePayload.currency = currency.trim().toUpperCase();
+    }
+    if (budget !== undefined && budget !== null && !Number.isNaN(Number(budget))) {
+        updatePayload.budget = Number(budget);
+    }
+
+    if (!Object.keys(updatePayload).length) {
+        return res.status(400).json({ message: "No profile fields to update" });
+    }
+
+    const user = await User.findOneAndUpdate({ _id: userId }, updatePayload, { returnDocument: 'after' });
+    if (user) {
+        return res.status(200).json({ message: "Success", data: { name: user.name, currency: user.currency, budget: user.budget } });
+    }
+    return res.status(400).json({ message: "User not found" });
+})
+
+router.patch('/update/password', async (req, res) => {
+    const { userId, password } = req.body;
+    if (!userId || !password) {
+        return res.status(400).json({ message: "Please enter all fields" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await User.findOneAndUpdate({ _id: userId }, { password: hashedPassword }, { returnDocument: 'after' });
     if (user) {
         return res.status(200).json({ message: "Success" });
     }
     return res.status(400).json({ message: "User not found" });
 })
 
-router.put('/update/currency', async (req, res) => {
-    const { userId, currency } = req.body;
-    if (!userId || !currency) {
+router.patch('/update/email', async (req, res) => {
+    const { userId, email } = req.body;
+    if (!userId || !email) {
         return res.status(400).json({ message: "Please enter all fields" });
     }
-    const user = await User.findOneAndUpdate({ _id: userId }, { currency }, { returnDocument: 'after' });
 
+    const existing = await User.findOne({ email });
+    if (existing && String(existing._id) !== String(userId)) {
+        return res.status(400).json({ message: "Email already in use" });
+    }
+
+    const user = await User.findOneAndUpdate({ _id: userId }, { email }, { returnDocument: 'after' });
     if (user) {
-        return res.status(200).json({ message: "Success" });
+        return res.status(200).json({ message: "Success", data: { email: user.email } });
     }
     return res.status(400).json({ message: "User not found" });
 })
@@ -77,7 +110,7 @@ router.get('/profile/:userId', async (req, res) => {
     const userId = req.params.userId;
     const user = await User.findOne({ _id: userId });
     if (user) {
-        return res.status(200).json({ message: "Success", data: { name: user.name, email: user.email, currency: user.currency } });
+        return res.status(200).json({ message: "Success", data: { name: user.name, email: user.email, currency: user.currency, budget: user.budget } });
     }
     return res.status(400).json({ message: "User not found" });
 })

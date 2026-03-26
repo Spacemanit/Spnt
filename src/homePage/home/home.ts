@@ -29,10 +29,22 @@ export class Home implements OnInit {
   dashboardService = inject(DashboardService);
   route = inject(ActivatedRoute);
   userId: string | null = null;
+  predefinedTags = ['essential', 'subscription', 'reimbursable', 'family', 'work', 'travel'];
 
   dataList = signal<DataList[]>([]);
+  selectedNewTags = signal<string[]>([]);
+  availableTags = computed(() => {
+    const customTags = this.dataList()
+      .flatMap((entry) => entry.tags ?? [])
+      .map((tag) => this.normalizeTag(tag))
+      .filter((tag) => !!tag);
+
+    return [...new Set([...this.predefinedTags, ...customTags])];
+  });
   userCurrency = signal(localStorage.getItem('currency') || 'USD');
   isLoading = signal(false);
+  monthlyTotal = signal(0);
+  budgetLeft = signal<string>('N/A');
   showCreatePanel = signal(false);
   visibleCount = signal(20);
   visibleEntries = computed(() => this.dataList().slice(0, this.visibleCount()));
@@ -76,8 +88,9 @@ export class Home implements OnInit {
 
   createNew(title: string, description: string, money: number, category: string, date: string) {
     console.log(this.userId);
+    const tags = this.selectedNewTags();
     if (this.userId) {
-      this.dashboardService.createNew(this.userId, title, description, money, category, date)
+      this.dashboardService.createNew(this.userId, title, description, money, category, date, tags)
         .pipe(
           catchError(err => {
             alert(err);
@@ -87,6 +100,7 @@ export class Home implements OnInit {
         .subscribe((response: any) => {
           if (response.message === "Success") {
             console.log("Data created successfully");
+            this.selectedNewTags.set([]);
             this.fetchData();
           }
         })
@@ -106,7 +120,7 @@ export class Home implements OnInit {
       )
       .subscribe((response: any) => {
         this.dataList.set((response as { data: DataList[] }).data ?? []);
-        this.getSpentThisMonth();
+        this.recomputeDashboardTotals();
       });
   }
 
@@ -139,8 +153,9 @@ export class Home implements OnInit {
       })
   }
 
-  editItem(id: string, title: string, description: string, money: number, category: string) {
-    this.dashboardService.editItem(this.userId!, id, title, description, money, category)
+  editItem(id: string, title: string, description: string, money: number, category: string, tagsInput: string) {
+    const tags = this.parseTagsInput(tagsInput);
+    this.dashboardService.editItem(this.userId!, id, title, description, money, category, tags)
       .pipe(
         catchError(err => {
           console.error(err);
@@ -154,6 +169,56 @@ export class Home implements OnInit {
       })
   }
 
+  toggleNewTag(tag: string) {
+    this.selectedNewTags.update((currentTags) => {
+      const normalized = this.normalizeTag(tag);
+      if (!normalized) {
+        return currentTags;
+      }
+      if (currentTags.includes(normalized)) {
+        return currentTags.filter((currentTag) => currentTag !== normalized);
+      }
+      return [...currentTags, normalized];
+    });
+  }
+
+  addCustomNewTag(rawTag: string) {
+    const normalized = this.normalizeTag(rawTag);
+    if (!normalized) {
+      return;
+    }
+    this.selectedNewTags.update((currentTags) => {
+      if (currentTags.includes(normalized)) {
+        return currentTags;
+      }
+      return [...currentTags, normalized];
+    });
+  }
+
+  removeNewTag(tag: string) {
+    this.selectedNewTags.update((currentTags) => currentTags.filter((currentTag) => currentTag !== tag));
+  }
+
+  parseTagsInput(tagsInput: string) {
+    const tags = tagsInput
+      .split(',')
+      .map((tag) => this.normalizeTag(tag))
+      .filter((tag) => !!tag);
+
+    return [...new Set(tags)];
+  }
+
+  getTagsInputValue(tags?: string[]) {
+    if (!tags?.length) {
+      return '';
+    }
+    return tags.join(', ');
+  }
+
+  private normalizeTag(rawTag: string) {
+    return rawTag.trim().toLowerCase();
+  }
+
   getTotalSpent(): string {
     let total = 0;
     for (const item of this.dataList()) {
@@ -163,15 +228,42 @@ export class Home implements OnInit {
   }
 
   getSpentThisMonth(): string {
-    const thisMonth = new Date().getMonth().toLocaleString('en-US', { minimumIntegerDigits: 2 });
+    const thisMonth = new Date().getMonth();
     const thisYear = new Date().getFullYear();
     let total = 0;
     for (const item of this.dataList()) {
       const itemDate = new Date(item.date);
-      if (itemDate.getMonth() === parseInt(thisMonth) && itemDate.getFullYear() === thisYear) {
+      if (itemDate.getMonth() === thisMonth && itemDate.getFullYear() === thisYear) {
         total += item.money || 0;
       }
     }
     return total.toLocaleString('en-US', { style: 'currency', currency: this.userCurrency() });
+  }
+
+  private recomputeDashboardTotals() {
+    const thisMonth = new Date().getMonth();
+    const thisYear = new Date().getFullYear();
+    let total = 0;
+
+    for (const item of this.dataList()) {
+      const itemDate = new Date(item.date);
+      if (itemDate.getMonth() === thisMonth && itemDate.getFullYear() === thisYear) {
+        total += item.money || 0;
+      }
+    }
+
+    this.monthlyTotal.set(total);
+    this.getBudgetLeft();
+  }
+
+  getBudgetLeft() {
+    const monthlyBudget = localStorage.getItem('monthlyBudget');
+    if (!monthlyBudget) {
+      this.budgetLeft.set('N/A');
+      return;
+    }
+    const budget = parseFloat(monthlyBudget);
+    console.log('Budget:', budget, 'Monthly Total:', this.monthlyTotal());
+    this.budgetLeft.set((budget - this.monthlyTotal()).toLocaleString('en-US', { style: 'currency', currency: this.userCurrency() }));
   }
 }

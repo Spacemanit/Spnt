@@ -8,12 +8,12 @@ dotenv.config();
 
 router.post('/:id/new/', async (req, res) => {
     const userId = req.params.id;
-    const { title, money, category, description, date } = req.body;
+    const { title, money, category, description, date, tags } = req.body;
     if (!title) {
         return res.status(400).json({ message: "Please enter all fields" });
     }
     const dataId = Date.now().toString();
-    const newData = new Data({ userId, dataId, title, money, category, description, date });
+    const newData = new Data({ userId, dataId, title, money, category, description, date, tags: Array.isArray(tags) ? tags : [] });
     await newData.save();
     if (!newData) {
         return res.status(400).json({ message: "Failed while creating new data"});
@@ -45,13 +45,17 @@ router.delete('/:id/delete/:dataId', async (req, res) => {
 
 router.put('/:id/edit', async (req, res) => {
     const userId = req.params.id;
-    const { dataId, title, money, category, description } = req.body;
+    const { dataId, title, money, category, description, tags } = req.body;
     console.log(dataId, userId)
 
     if (!dataId || !title) {
         return res.status(400).json({ message: "Please enter all fields" });
     }
-    const data = await Data.findOneAndUpdate({ _id: dataId, userId: userId }, { title, money, category, description }, { returnDocument: 'after' });
+    const data = await Data.findOneAndUpdate(
+        { _id: dataId, userId: userId },
+        { title, money, category, description, tags: Array.isArray(tags) ? tags : [] },
+        { returnDocument: 'after' }
+    );
     if (!data) {
         return res.status(400).json({ message: "Failed while editing data" });
     }

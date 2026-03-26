@@ -4,5 +4,6 @@ export type DataList = {
     money: number;
     category: string;
     description?: string;
+    tags?: string[];
     date: string;
 }
