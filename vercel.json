@@ -6,7 +6,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://REPLACE-WITH-RENDER-URL/:path*"
+      "destination": "https://api-spnt.onrender.com/*"
     },
     {
       "source": "/(.*)",
