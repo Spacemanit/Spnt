@@ -1,0 +1,90 @@
+<main class="min-h-screen">
+  <section class="mx-auto max-w-3xl px-4 py-6 sm:px-8">
+    <app-ink-header [userId]="userId" page="IDX" entriesLabel="SETTINGS" />
+
+    <div class="ink-card mt-4 p-6">
+      <p class="font-mono-ink text-center text-[11px] uppercase tracking-[0.25em] opacity-60">Reader card</p>
+      <h1 class="font-ledger mt-1 text-center text-3xl font-black">Index</h1>
+
+      <div class="mt-6 space-y-4">
+        <div class="ink-panel px-4 py-3">
+          <p class="font-mono-ink text-[11px] uppercase tracking-widest opacity-60">Name</p>
+          <p class="mt-1 font-ledger text-lg font-bold">{{ userData().name || '—' }}</p>
+        </div>
+        <div class="ink-panel px-4 py-3">
+          <p class="font-mono-ink text-[11px] uppercase tracking-widest opacity-60">Email</p>
+          <p class="mt-1 font-mono-ink text-sm">{{ userData().email || '—' }}</p>
+        </div>
+
+        <div class="ink-panel px-4 py-3">
+          <p class="font-mono-ink text-[11px] uppercase tracking-widest opacity-60">Monthly budget</p>
+          <div class="mt-2 flex gap-2">
+            <input #newBudget type="number" min="0" step="1" [value]="userData().budget" class="ink-input w-full px-3 py-2 text-sm">
+            <button type="button" class="ink-btn px-4 py-2 font-mono-ink text-xs uppercase" (click)="changeBudget(newBudget.value)" aria-label="Save budget">File</button>
+          </div>
+          <label class="mt-3 flex cursor-pointer items-start gap-2 text-sm">
+            <input type="checkbox" [checked]="userData().rolloverEnabled" (change)="toggleRollover($any($event.target).checked)" class="mt-1">
+            <span><strong>Monthly rollover</strong> — carry leftover forward, carry overspend as debt.<br>
+            <span class="font-mono-ink text-[11px] uppercase opacity-60">Effective = base + prev leftover (can be negative)</span></span>
+          </label>
+        </div>
+
+        <div class="ink-panel px-4 py-3">
+          <p class="font-mono-ink text-[11px] uppercase tracking-widest opacity-60">Savings goal (single)</p>
+          <div class="mt-2 grid gap-2 sm:grid-cols-3">
+            <input #goalLabel type="text" maxlength="60" placeholder="Label" [value]="userData().savingsLabel" class="ink-input px-3 py-2 text-sm">
+            <input #goalTarget type="number" min="0" step="1" placeholder="Target" [value]="userData().savingsTarget" class="ink-input px-3 py-2 text-sm">
+            <input #goalDeadline type="date" [value]="userData().savingsDeadline" class="ink-input px-3 py-2 text-sm">
+          </div>
+          <button type="button" class="ink-btn mt-2 w-full px-4 py-2 font-mono-ink text-xs uppercase" (click)="saveSavings(goalLabel.value, goalTarget.value, goalDeadline.value)">File goal</button>
+          <p class="font-mono-ink mt-2 text-[11px] uppercase opacity-60">Progress = budget left this month vs target</p>
+        </div>
+
+        <div class="ink-panel px-4 py-3">
+          <p class="font-mono-ink text-[11px] uppercase tracking-widest opacity-60">Currency</p>
+          <div class="mt-2 flex gap-2">
+            <select #newCurrency [value]="userData().currency" class="ink-input w-full px-3 py-2 font-mono-ink text-sm uppercase">
+              @for (c of currencies; track c) { <option [value]="c">{{ c }}</option> }
+            </select>
+            <button type="button" class="ink-btn px-4 py-2 font-mono-ink text-xs uppercase" (click)="changeCurrency(newCurrency.value)" aria-label="Save currency">File</button>
+          </div>
+          <p class="font-mono-ink mt-2 text-[11px] uppercase opacity-60">ISO 4217 — 3 letters</p>
+        </div>
+
+        <button type="button" class="ink-btn-ghost w-full px-4 py-2.5 font-mono-ink text-xs uppercase" (click)="isPasswordChange = !isPasswordChange">
+          {{ isPasswordChange ? '[ Close ]' : 'Change password' }}
+        </button>
+
+        @if (isPasswordChange) {
+          <div class="ink-panel space-y-3 p-4">
+            <label for="newPassword" class="font-mono-ink text-[11px] uppercase tracking-widest">New password (6+)</label>
+            <input id="newPassword" #newPassword type="password" placeholder="New password" class="ink-input w-full px-3 py-2 text-sm">
+            <button type="button" class="ink-btn w-full px-4 py-2.5 font-mono-ink text-xs uppercase" (click)="passwordChange(newPassword.value)">Stamp new password</button>
+          </div>
+        }
+
+        <div class="ink-hr-dashed"></div>
+
+        <div class="flex flex-wrap gap-2 no-print">
+          @if (userId) {
+            <a [routerLink]="['/home', userId]" class="ink-btn-ghost flex-1 px-4 py-2 text-center font-mono-ink text-xs uppercase">← Ledger</a>
+          }
+          <button type="button" (click)="logout()" class="ink-btn-ghost flex-1 px-4 py-2 font-mono-ink text-xs uppercase">Log out</button>
+        </div>
+
+        @if (!confirmDelete()) {
+          <button type="button" (click)="confirmDelete.set(true)" class="w-full border-2 border-dashed px-4 py-2 font-mono-ink text-xs uppercase opacity-70" style="border-color: var(--rule)">Remove account…</button>
+        } @else {
+          <div class="ink-card-flat p-4">
+            <p class="font-ledger font-bold">Erase everything?</p>
+            <p class="mt-1 text-sm opacity-70">Entries and profile are deleted. This cannot be undone.</p>
+            <div class="mt-3 flex gap-2">
+              <button type="button" (click)="deleteAccount()" class="ink-btn flex-1 px-4 py-2 font-mono-ink text-xs uppercase">Yes, erase</button>
+              <button type="button" (click)="confirmDelete.set(false)" class="ink-btn-ghost flex-1 px-4 py-2 font-mono-ink text-xs uppercase">Keep</button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+</main>

@@ -1,0 +1,77 @@
+{
+  "name": "spnt",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "vercel-build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "server": "cd server && npm start",
+    "global": "NG_ALLOWED_HOSTS=localhost,127.0.0.1,10.105.238.51,100.125.104.118 ng serve --host 0.0.0.0 --port 4200",
+    "serve:ssr:Spnt": "node dist/Spnt/server/server.mjs"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "private": true,
+  "packageManager": "npm@11.7.0",
+  "dependencies": {
+    "@angular/aria": "^21.2.0",
+    "@angular/common": "^21.1.0",
+    "@angular/compiler": "^21.1.0",
+    "@angular/core": "^21.1.0",
+    "@angular/forms": "^21.1.0",
+    "@angular/localize": "^21.2.0",
+    "@angular/platform-browser": "^21.1.0",
+    "@angular/platform-server": "^21.1.0",
+    "@angular/router": "^21.1.0",
+    "@angular/ssr": "^21.1.4",
+    "@progress/kendo-angular-common": "23.2.0",
+    "@progress/kendo-angular-icons": "23.2.0",
+    "@progress/kendo-angular-intl": "23.2.0",
+    "@progress/kendo-angular-l10n": "23.2.0",
+    "@progress/kendo-angular-navigation": "23.2.0",
+    "@progress/kendo-angular-popup": "23.2.0",
+    "@progress/kendo-drawing": "^1.24.0",
+    "@progress/kendo-licensing": "^1.10.0",
+    "@progress/kendo-theme-default": "13.0.1",
+    "bcryptjs": "^3.0.3",
+    "chart.js": "^4.5.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.2.3",
+    "ng2-charts": "^9.0.0",
+    "nodemon": "^3.1.14",
+    "path": "^0.12.7",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "url": "^0.11.4"
+  },
+  "devDependencies": {
+    "@angular/build": "^21.1.4",
+    "@angular/cli": "^21.1.4",
+    "@angular/compiler-cli": "^21.1.0",
+    "@progress/kendo-angular-charts": "^23.2.0",
+    "@tailwindcss/postcss": "^4.1.12",
+    "@types/express": "^5.0.1",
+    "@types/node": "^20.17.19",
+    "jsdom": "^27.1.0",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.12",
+    "typescript": "~5.9.2",
+    "vitest": "^4.0.8"
+  }
+}

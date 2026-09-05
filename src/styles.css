@@ -1,0 +1,160 @@
+@import "tailwindcss";
+
+@theme {
+  --breakpoint-xl: 1100px;
+  --color-paper: #faf9f6;
+  --color-paper-dim: #f1efe9;
+  --color-ink: #141412;
+  --color-ink-soft: #3d3d3a;
+  --color-rule: #141412;
+  --font-ledger: "Newsreader", "Georgia", serif;
+  --font-mono-ink: "IBM Plex Mono", "SFMono-Regular", monospace;
+}
+
+:root {
+  --paper: #faf9f6;
+  --paper-dim: #f1efe9;
+  --ink: #141412;
+  --ink-soft: #3d3d3a;
+  --rule: #141412;
+}
+
+html.ink-invert {
+  --paper: #101010;
+  --paper-dim: #1a1a1a;
+  --ink: #f4f1e8;
+  --ink-soft: #c9c5b8;
+  --rule: #f4f1e8;
+}
+
+html, body {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* E-ink paper grain (subtle, no gradients) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: radial-gradient(var(--ink) 0.6px, transparent 0.6px);
+  background-size: 5px 5px;
+  z-index: 0;
+}
+
+.ink-wrap { position: relative; z-index: 1; }
+
+.font-ledger { font-family: var(--font-ledger); }
+.font-mono-ink { font-family: var(--font-mono-ink); }
+
+/* Core ink primitives */
+.ink-card {
+  background: var(--paper);
+  border: 2px solid var(--rule);
+  box-shadow: 4px 4px 0 var(--rule);
+}
+.ink-card-flat {
+  background: var(--paper);
+  border: 2px solid var(--rule);
+}
+.ink-panel {
+  background: var(--paper-dim);
+  border: 2px solid var(--rule);
+}
+.ink-btn {
+  border: 2px solid var(--rule);
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 700;
+  box-shadow: 3px 3px 0 color-mix(in srgb, var(--rule) 35%, transparent);
+}
+.ink-btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--rule); }
+.ink-btn:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--rule); }
+.ink-btn-ghost {
+  border: 2px solid var(--rule);
+  background: transparent;
+  color: var(--ink);
+  font-weight: 700;
+}
+.ink-btn-ghost:hover { background: var(--ink); color: var(--paper); }
+.ink-input {
+  border: 2px solid var(--rule) !important;
+  background: var(--paper) !important;
+  color: var(--ink) !important;
+  border-radius: 0 !important;
+  outline: none !important;
+}
+.ink-input::placeholder { color: color-mix(in srgb, var(--ink) 45%, transparent); }
+.ink-input:focus { box-shadow: 3px 3px 0 var(--rule); }
+select.ink-input option { background: var(--paper); color: var(--ink); }
+
+.ink-rule { border-color: var(--rule); }
+.ink-hr { border-top: 2px solid var(--rule); }
+.ink-hr-dashed { border-top: 2px dashed color-mix(in srgb, var(--rule) 60%, transparent); }
+
+.ink-chip {
+  border: 2px solid var(--rule);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-mono-ink);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.ink-chip[aria-pressed="true"], .ink-chip.on {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.ink-stamp {
+  border: 2px solid var(--rule);
+  transform: rotate(-2deg);
+  font-family: var(--font-mono-ink);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ink-table th {
+  font-family: var(--font-mono-ink);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--rule);
+}
+.ink-table td { border-bottom: 1px solid color-mix(in srgb, var(--rule) 35%, transparent); }
+
+/* E-ink: no smooth animations, instant refresh */
+@media (prefers-reduced-motion: no-preference) {
+  .ink-btn, .ink-btn-ghost, .ink-chip { transition: none; }
+}
+* { transition-duration: 0ms !important; animation-duration: 0ms !important; }
+
+/* Screen-only vs print-only */
+.print-ledger { display: none; }
+
+@media print {
+  :root, html.ink-invert {
+    --paper: #ffffff;
+    --paper-dim: #ffffff;
+    --ink: #000000;
+    --ink-soft: #000000;
+    --rule: #000000;
+  }
+  html, body { background: #fff !important; color: #000 !important; }
+  body::before { display: none; }
+  .ink-card, .ink-card-flat, .ink-panel { box-shadow: none !important; background: #fff !important; }
+  .no-print, .screen-ledger { display: none !important; }
+  .print-ledger { display: block !important; color: #000; }
+  .print-head h1 { font-family: var(--font-ledger); font-size: 20pt; font-weight: 900; margin: 0 0 4pt; }
+  .print-head p { font-family: var(--font-mono-ink); font-size: 9pt; margin: 0 0 10pt; }
+  .print-ledger table { width: 100%; border-collapse: collapse; font-size: 9pt; }
+  .print-ledger th { border-bottom: 2pt solid #000; text-align: left; padding: 4pt 6pt; font-family: var(--font-mono-ink); text-transform: uppercase; font-size: 8pt; }
+  .print-ledger td { border-bottom: 0.75pt solid #000; padding: 4pt 6pt; vertical-align: top; }
+  .print-ledger tr { break-inside: avoid; }
+  .print-foot { font-family: var(--font-mono-ink); font-size: 8pt; margin-top: 10pt; }
+  @page { margin: 12mm; }
+}

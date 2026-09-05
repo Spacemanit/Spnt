@@ -1,0 +1,14 @@
+<div class="grid gap-4 md:grid-cols-2">
+  <div>
+    <p class="font-mono-ink text-[11px] uppercase tracking-widest opacity-70">By category</p>
+    <div style="height: 240px;" class="mt-2">
+      <canvas baseChart [data]="doughnutChartData()" [options]="doughnutChartOptions()" [type]="'doughnut'"></canvas>
+    </div>
+  </div>
+  <div>
+    <p class="font-mono-ink text-[11px] uppercase tracking-widest opacity-70">By month (last 8)</p>
+    <div style="height: 240px;" class="mt-2">
+      <canvas baseChart [data]="trendData()" [options]="trendOptions" [type]="'bar'"></canvas>
+    </div>
+  </div>
+</div>

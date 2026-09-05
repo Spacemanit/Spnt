@@ -1,0 +1,67 @@
+<main class="min-h-screen">
+  <section class="mx-auto flex min-h-screen max-w-6xl items-center justify-center px-4 py-10 sm:px-8">
+    <div class="w-full max-w-md">
+      <app-ink-header page="AUTH" entriesLabel="ACCESS" />
+      <div class="ink-card mt-4 p-6">
+        <p class="text-center font-mono-ink text-[11px] tracking-[0.25em] uppercase opacity-70">Access folio</p>
+        <h1 class="font-ledger mt-2 text-center text-3xl font-black">
+          @if (mode() === 'login') { Log in } @else { Sign up }
+        </h1>
+
+        <div class="mt-5 grid grid-cols-2 gap-2 border-2 p-1" style="border-color: var(--rule)">
+          <button type="button" class="px-3 py-2 font-mono-ink text-xs uppercase font-bold"
+            [class.ink-btn]="mode() === 'login'" (click)="mode.set('login'); formError.set('')">Log in</button>
+          <button type="button" class="px-3 py-2 font-mono-ink text-xs uppercase font-bold"
+            [class.ink-btn]="mode() === 'signup'" (click)="mode.set('signup'); formError.set('')">Sign up</button>
+        </div>
+
+        @if (formError()) {
+          <p class="mt-4 border-2 px-3 py-2 font-mono-ink text-xs uppercase" style="border-color: var(--rule)" role="alert">[ ERR ] {{ formError() }}</p>
+        }
+
+        @if (mode() === 'login') {
+          <form class="mt-6 space-y-3" (submit)="$event.preventDefault(); login(loginEmail.value, loginPass.value)">
+            <div class="space-y-1">
+              <label for="loginEmail" class="font-mono-ink text-[11px] uppercase tracking-widest">Email</label>
+              <input id="loginEmail" #loginEmail type="email" autocomplete="email" placeholder="you@paper.test" class="ink-input w-full px-3 py-2 text-sm">
+            </div>
+            <div class="space-y-1">
+              <label for="loginPass" class="font-mono-ink text-[11px] uppercase tracking-widest">Password</label>
+              <input id="loginPass" #loginPass type="password" autocomplete="current-password" placeholder="••••••••" class="ink-input w-full px-3 py-2 text-sm">
+            </div>
+            <button type="submit" [disabled]="isBusy()" class="ink-btn w-full px-4 py-2.5 font-mono-ink text-sm uppercase disabled:opacity-50">
+              {{ isBusy() ? '[ WORKING... ]' : 'Continue_' }}
+            </button>
+          </form>
+          <p class="mt-4 text-center text-xs">No account?
+            <button type="button" class="font-bold underline" (click)="mode.set('signup')">Sign up</button>
+          </p>
+        } @else {
+          <form class="mt-6 space-y-3" (submit)="$event.preventDefault(); signup(signupName.value, signupEmail.value, signupPass.value)">
+            <div class="space-y-1">
+              <label for="signupName" class="font-mono-ink text-[11px] uppercase tracking-widest">Full name</label>
+              <input id="signupName" #signupName type="text" autocomplete="name" placeholder="Ada Ledger" class="ink-input w-full px-3 py-2 text-sm">
+            </div>
+            <div class="space-y-1">
+              <label for="signupEmail" class="font-mono-ink text-[11px] uppercase tracking-widest">Email</label>
+              <input id="signupEmail" #signupEmail type="email" autocomplete="email" placeholder="you@paper.test" class="ink-input w-full px-3 py-2 text-sm">
+            </div>
+            <div class="space-y-1">
+              <label for="signupPass" class="font-mono-ink text-[11px] uppercase tracking-widest">Password (6+)</label>
+              <input id="signupPass" #signupPass type="password" autocomplete="new-password" placeholder="Create password" class="ink-input w-full px-3 py-2 text-sm">
+            </div>
+            <button type="submit" [disabled]="isBusy()" class="ink-btn w-full px-4 py-2.5 font-mono-ink text-sm uppercase disabled:opacity-50">
+              {{ isBusy() ? '[ WORKING... ]' : 'Create account_' }}
+            </button>
+          </form>
+          <p class="mt-4 text-center text-xs">Have an account?
+            <button type="button" class="font-bold underline" (click)="mode.set('login')">Log in</button>
+          </p>
+        }
+
+        <div class="ink-hr-dashed mt-6"></div>
+        <div class="mt-3 text-center font-mono-ink text-[11px] uppercase"><a routerLink="/" class="underline">← Back to cover</a></div>
+      </div>
+    </div>
+  </section>
+</main>
