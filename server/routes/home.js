@@ -48,7 +48,7 @@ function sortFor(param) {
 }
 
 router.post(
-  '/:id/new/',
+  '/:id/new',
   asyncHandler(async (req, res) => {
     const userId = req.params.id;
     const { errors, value } = validateExpenseInput(req.body, { requireTitle: true });
