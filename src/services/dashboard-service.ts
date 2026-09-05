@@ -66,7 +66,7 @@ export class DashboardService {
     date: string,
     tags: string[] = []
   ): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${api}/api/home/${userId}/new/`, {
+    return this.http.post<{ message: string }>(`${api}/api/home/${userId}/new`, {
       title,
       description,
       money,
@@ -81,7 +81,7 @@ export class DashboardService {
     for (const [k, v] of Object.entries(filters)) {
       if (v !== undefined && v !== null && v !== '') params = params.set(k, String(v));
     }
-    return this.http.get<ExpenseListResponse>(`${api}/api/home/${userId}/`, { params });
+    return this.http.get<ExpenseListResponse>(`${api}/api/home/${userId}`, { params });
   }
 
   getSummary(userId: string, month?: string): Observable<ExpenseSummary> {
@@ -103,7 +103,7 @@ export class DashboardService {
     category: string,
     tags: string[] = []
   ) {
-    return this.http.put(`${api}/api/home/${userId}/edit/`, {
+    return this.http.put(`${api}/api/home/${userId}/edit`, {
       dataId,
       title,
       description,
